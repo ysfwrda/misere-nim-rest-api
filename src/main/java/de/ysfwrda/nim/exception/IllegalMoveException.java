@@ -1,0 +1,8 @@
+package de.ysfwrda.nim.exception;
+
+public class IllegalMoveException extends RuntimeException {
+
+    public IllegalMoveException(String message) {
+        super(message);
+    }
+}

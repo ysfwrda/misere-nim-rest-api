@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: nim
+nim:
+  default-strategy: OPTIMAL
