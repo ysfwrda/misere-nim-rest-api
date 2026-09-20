@@ -17,14 +17,20 @@ class GameTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
-    void rejectsConstructionWithHeapSizeBelowOne(int heapSize) {
+    void rejectsGameConstructionWithHeapSizeBelowOne(int heapSize) {
         assertThatThrownBy(() -> new Game(UUID.randomUUID(), heapSize, StrategyType.OPTIMAL))
                 .isInstanceOf(InvalidHeapSizeException.class);
     }
 
+    @Test
+    void rejectsGameConstructionWithNullStrategy() {
+        assertThatThrownBy(() -> new Game(UUID.randomUUID(), 5, null))
+                .isInstanceOf(NullPointerException.class);
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {0, 4})
-    void rejectsCountOutsideOneToThree(int count) {
+    void rejectsMoveCountOutsideOneToThree(int count) {
         Game game = new Game(UUID.randomUUID(), 5, StrategyType.OPTIMAL);
 
         assertThatThrownBy(() -> game.applyMove(count, Player.USER))
@@ -32,7 +38,7 @@ class GameTest {
     }
 
     @Test
-    void rejectsCountLargerThanRemainingHeap() {
+    void rejectsMoveCountLargerThanRemainingHeap() {
         Game game = new Game(UUID.randomUUID(), 2, StrategyType.OPTIMAL);
 
         assertThatThrownBy(() -> game.applyMove(3, Player.USER))
@@ -56,6 +62,8 @@ class GameTest {
 
         assertThat(game.winner()).isEqualTo(Player.COMPUTER);
     }
+
+
 
     @Test
     void heapDecreasesByExactlyTheCountTaken() {

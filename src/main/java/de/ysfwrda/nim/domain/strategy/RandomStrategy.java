@@ -15,7 +15,7 @@ public class RandomStrategy implements GameStrategy {
 
     @Override
     public int chooseMove(int heapSize) {
-        return random.nextInt(Math.min(3, heapSize)) + 1;
+        return random.nextInt(1, Math.min(3, heapSize) + 1);
     }
 
     @Override

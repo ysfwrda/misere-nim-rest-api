@@ -41,6 +41,9 @@ public class GameService {
     }
 
     public MoveResponse move(UUID id, int count) {
+        // Human move and computer reply must apply as one atomic turn, so concurrent
+        // requests for the same game can't interleave. Hence the whole sequence runs
+        // inside repository.update rather than find-then-save.
         AtomicReference<Integer> computerMove = new AtomicReference<>();
         Game game = repository.update(id, current -> {
             current.applyMove(count, Player.USER);

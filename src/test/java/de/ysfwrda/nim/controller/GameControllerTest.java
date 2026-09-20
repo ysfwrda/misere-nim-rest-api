@@ -8,6 +8,8 @@ import de.ysfwrda.nim.exception.GameNotFoundException;
 import de.ysfwrda.nim.exception.GameOverException;
 import de.ysfwrda.nim.service.GameService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -86,24 +88,12 @@ class GameControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
     }
 
-    @Test
-    void createGame_zeroHeapSize_returns400ProblemJson() throws Exception {
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1})
+    void createGame_heapSizeBelowOne_returns400ProblemJson(int heapSize) throws Exception {
         mockMvc.perform(post("/games")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"heapSize": 0}
-                                """))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
-    }
-
-    @Test
-    void createGame_negativeHeapSize_returns400ProblemJson() throws Exception {
-        mockMvc.perform(post("/games")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"heapSize": -1}
-                                """))
+                        .content("{\"heapSize\": " + heapSize + "}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
     }

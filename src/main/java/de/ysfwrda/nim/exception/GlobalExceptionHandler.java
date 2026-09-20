@@ -15,13 +15,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidHeapSizeException.class)
-    public ProblemDetail handleInvalidHeapSize(InvalidHeapSizeException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
-    @ExceptionHandler(IllegalMoveException.class)
-    public ProblemDetail handleIllegalMove(IllegalMoveException ex) {
+    @ExceptionHandler({InvalidHeapSizeException.class, IllegalMoveException.class})
+    public ProblemDetail handleInvalidGameInput(RuntimeException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
@@ -44,7 +39,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ProblemDetail handleMalformedBody(HttpMessageNotReadableException ex) {
+    public ProblemDetail handleMalformedBody() {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Malformed request body");
     }
 
