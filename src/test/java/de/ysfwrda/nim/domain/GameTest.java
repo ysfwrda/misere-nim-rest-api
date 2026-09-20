@@ -17,20 +17,20 @@ class GameTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, -1})
-    void rejectsGameConstructionWithHeapSizeBelowOne(int heapSize) {
+    void constructor_heapSizeBelowOne_throwsInvalidHeapSizeException(int heapSize) {
         assertThatThrownBy(() -> new Game(UUID.randomUUID(), heapSize, StrategyType.OPTIMAL))
                 .isInstanceOf(InvalidHeapSizeException.class);
     }
 
     @Test
-    void rejectsGameConstructionWithNullStrategy() {
+    void constructor_nullStrategy_throwsNullPointerException() {
         assertThatThrownBy(() -> new Game(UUID.randomUUID(), 5, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, 4})
-    void rejectsMoveCountOutsideOneToThree(int count) {
+    void applyMove_countOutsideOneToThree_throwsIllegalMoveException(int count) {
         Game game = new Game(UUID.randomUUID(), 5, StrategyType.OPTIMAL);
 
         assertThatThrownBy(() -> game.applyMove(count, Player.USER))
@@ -38,7 +38,7 @@ class GameTest {
     }
 
     @Test
-    void rejectsMoveCountLargerThanRemainingHeap() {
+    void applyMove_countLargerThanRemainingHeap_throwsIllegalMoveException() {
         Game game = new Game(UUID.randomUUID(), 2, StrategyType.OPTIMAL);
 
         assertThatThrownBy(() -> game.applyMove(3, Player.USER))
@@ -46,7 +46,7 @@ class GameTest {
     }
 
     @Test
-    void rejectsAnyMoveOnceGameIsOver() {
+    void applyMove_gameAlreadyOver_throwsGameOverException() {
         Game game = new Game(UUID.randomUUID(), 1, StrategyType.OPTIMAL);
         game.applyMove(1, Player.USER);
 
@@ -55,7 +55,7 @@ class GameTest {
     }
 
     @Test
-    void takingLastMatchSetsWinnerToOpponentOfMover() {
+    void applyMove_takesLastMatch_setsWinnerToOpponentOfMover() {
         Game game = new Game(UUID.randomUUID(), 1, StrategyType.OPTIMAL);
 
         game.applyMove(1, Player.USER);
@@ -63,10 +63,8 @@ class GameTest {
         assertThat(game.winner()).isEqualTo(Player.COMPUTER);
     }
 
-
-
     @Test
-    void heapDecreasesByExactlyTheCountTaken() {
+    void applyMove_validCount_decreasesHeapByThatCount() {
         Game game = new Game(UUID.randomUUID(), 5, StrategyType.OPTIMAL);
 
         game.applyMove(2, Player.USER);

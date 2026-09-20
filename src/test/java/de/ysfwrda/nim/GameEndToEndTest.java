@@ -6,6 +6,7 @@ import de.ysfwrda.nim.dto.CreateGameRequest;
 import de.ysfwrda.nim.dto.GameResponse;
 import de.ysfwrda.nim.dto.MoveRequest;
 import de.ysfwrda.nim.dto.MoveResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
@@ -22,8 +23,9 @@ class GameEndToEndTest {
     @Autowired
     private RestTestClient restTestClient;
 
+    @DisplayName("The computer wins a full game from heap 13 against the optimal strategy")
     @Test
-    void computerWinsAFullGameFromHeapThirteenAgainstOptimalStrategy() {
+    void fullGame_heapThirteenAgainstOptimalStrategy_computerWins() {
         GameResponse created = restTestClient.post().uri("/games")
                 .body(new CreateGameRequest(13, StrategyType.OPTIMAL))
                 .exchange()
@@ -51,6 +53,7 @@ class GameEndToEndTest {
             gameOver = latest.gameOver();
         }
 
+        assert latest != null;
         assertThat(latest.winner()).isEqualTo(Player.COMPUTER);
     }
 }

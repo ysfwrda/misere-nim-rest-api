@@ -38,7 +38,7 @@ class GameControllerTest {
     private GameService gameService;
 
     @Test
-    void createGame_returns201WithGameState() throws Exception {
+    void createGame_validRequest_returns201WithGameState() throws Exception {
         UUID id = UUID.randomUUID();
         when(gameService.createGame(any())).thenReturn(
                 new GameResponse(id, 5, false, Player.USER, null, StrategyType.OPTIMAL));
@@ -53,7 +53,7 @@ class GameControllerTest {
     }
 
     @Test
-    void move_returns200WithMoveState() throws Exception {
+    void move_validRequest_returns200WithMoveState() throws Exception {
         UUID id = UUID.randomUUID();
         when(gameService.move(eq(id), eq(1))).thenReturn(
                 new MoveResponse(id, 2, false, Player.USER, null, StrategyType.OPTIMAL, 2));
@@ -68,7 +68,7 @@ class GameControllerTest {
     }
 
     @Test
-    void getGame_returns200WithGameState() throws Exception {
+    void getGame_existingId_returns200WithGameState() throws Exception {
         UUID id = UUID.randomUUID();
         when(gameService.getGame(id)).thenReturn(
                 new GameResponse(id, 5, false, Player.USER, null, StrategyType.OPTIMAL));

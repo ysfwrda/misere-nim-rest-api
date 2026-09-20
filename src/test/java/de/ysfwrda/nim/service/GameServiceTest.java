@@ -36,7 +36,7 @@ class GameServiceTest {
     }
 
     @Test
-    void humanMoveIsAppliedBeforeComputerMove() {
+    void move_gameContinues_appliesHumanMoveBeforeComputerMove() {
         GameResponse created = service.createGame(new CreateGameRequest(5, StrategyType.OPTIMAL));
         when(strategy.chooseMove(4)).thenReturn(2);
 
@@ -49,7 +49,7 @@ class GameServiceTest {
     }
 
     @Test
-    void computerDoesNotMoveWhenHumanMoveEndsGame() {
+    void move_humanMoveEndsGame_computerDoesNotMove() {
         GameResponse created = service.createGame(new CreateGameRequest(1, StrategyType.OPTIMAL));
 
         MoveResponse response = service.move(created.id(), 1);
@@ -60,13 +60,13 @@ class GameServiceTest {
     }
 
     @Test
-    void unknownGameIdThrowsGameNotFoundException() {
+    void move_unknownGameId_throwsGameNotFoundException() {
         assertThatThrownBy(() -> service.move(UUID.randomUUID(), 1))
                 .isInstanceOf(GameNotFoundException.class);
     }
 
     @Test
-    void createGameUsesConfiguredDefaultStrategyWhenOmitted() {
+    void createGame_strategyOmitted_usesConfiguredDefaultStrategy() {
         GameResponse response = service.createGame(new CreateGameRequest(5, null));
 
         assertThat(response.strategy()).isEqualTo(StrategyType.OPTIMAL);
